@@ -10,7 +10,7 @@ The good news, however:
 * PDFs for all diagrams and state tables are kept up to date
 * Diagrams will be migrated to Model Integration's opensource Flatland text based model editor in early 2021
 * Markdown exported to HTML and PDF
-* Action language are in plain text files
+* Action language is in plain text files
 
 
 
