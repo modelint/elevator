@@ -1,0 +1,30 @@
+//
+// Cabin.Ping( dir: Direction ) : Acessible Shaft Level
+//
+// Search ahead of the Cabin in the indicated direction
+// return the nearest ASL with a stop request and/or a Floor Service calling
+// in that direction. If none is found, return the empty set.
+//
+
+// Get all bank levels between cabin and end of shaft in the indicated direction
+current floor number = /R43/R28/Floor.Number // Need ordinal, not floor name
+case ( in.dir ) {
+.up:
+    aslevs ahead of cabin ..= Accessible Shaft Level(
+        /R3/R28/Floor.Number: >= current floor number, Bank: Bank
+    )
+.down:
+    aslevs ahead of cabin ..= Accessible Shaft Level(
+        /R3/R28/Floor.Number: < current floor number, Bank: Bank
+    )
+}
+
+// Return the nearest floor ahead of the cabin with a stop requested or a floor service call
+// in the indicated direction
+=>> aslevs ahead of cabin(
+        -^Floor.distance(its.Floor) AND
+        (Stop requested OR /R49/Floor Service.Direction : in.dir )
+    )
+
+// The Ordinal type's distance operation returns the absolute value of the difference
+

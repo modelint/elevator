@@ -1,0 +1,12 @@
+//
+// Bank Level.Choose shaft( calling floor : Level Name, service dir: Direction ) : Shaft ID
+//
+
+// Invokes the Estimate delay method on all related instances of Cabin and returns
+// the Shaft ID of the one with the shortest delay
+
+// Scrall: The 1, in the restriction clause selects at most one
+=>> /R29/R1/Shaft/R2/Cabin(1, ^-Estimate delay( calling floor: Floor, in.service dir ) ).Shaft
+
+// A Bank must have at least one Cabin (R1/R2) and each Cabin will report some
+// delay value, so a single Shaft value will always be returned

@@ -1,0 +1,155 @@
+//
+// Cabin.Estimate delay( calling floor : Floor name, service dir : Direction ) : Duration
+//
+// Returns the distance in floor units from this Cabin to the specified floor
+// The algorithm is described and illustrated in the
+// Bank Select technical note. mint.elevator.tn.6
+
+// Get start, destination and direction data
+//
+calling fnum, calling height = Floor( Name: in.calling floor ).(Number, Height)
+cabin fnum, cabin height = /R43/R28/Floor.(Number, Height)
+top fnum = /R2/Shaft/Floor(+^Number) // max operator
+bottom fnum = Ordinal.least // operation on Ordinal type
+floor gap = Building.Average floor gap // Singleton selection, no restriction clause
+
+// Useful guards
+[calling up][calling down] = (in.service dir == .up)
+[cabin high][cabin low] = (cabin fnum > calling fnum)
+// sets true-false if true and vice versa
+
+// Test the simple case
+if (calling fnum == cabin fnum)
+    =>> _0.0 // distance is zero
+
+// Two key factors determine the number of reversals required to reach
+// the calling floor:
+//     1) Which side of the calling arrow are we at?
+//     2) Is our travel direction the same as the calling arrow?
+//
+// Mark high/low coordinates on shaft
+// and relative cabin/calling floor position
+//
+
+[behind the call arrow] = ( [cabin low] and [calling up] ) or ( [cabin high] and [calling down] )
+// single guard on LHS is set to true or false
+
+[dir match] = (Travel direction == in.service dir)
+
+// All shaft levels accessible in cabin's shaft with floor numbers
+// --- numbered aslevs ---
+// | Floor | Shaft | Bank | Stop Requested | Number |
+// ---
+numbered aslevs #= /R2/R28/R3/Accessible Shaft Level ## Floor.(Name >> Floor, Number)
+
+[dir match][behind the call arrow] {
+    //
+    // Case 1: Cabin is moving in the same direction and behind call arrow tail
+    // ..[cab->]....(call->)
+
+    // Route:
+    //
+    // Simplest route, it's a straight shot:
+    //
+    //   a> Toward call in correct direction
+
+    // Count stops and calls in the Cabin's travel direction only (ignore reverse calls).
+    // Don't count the cabin or calling floor
+
+    countable aslevs ..= numbered aslevs(Number: cabin fnum<>calling fnum)
+    stops = Count stops oneway(aslevs: countable aslevs, search dir: Travel direction)
+    distance = cabin height.separation(calling height)
+}
+
+[dir match][!behind the call arrow] {
+    //
+    // Case 2: Cabin is moving in the same direction, but is ahead of the call arrow
+    // ..(call->)....[cab->]
+    //
+    // Route:
+    //
+    // We'll have to take the long way around proceeding:
+    //
+    //   a> to turn 1 (top or bottom of shaft) and back
+    //   b> toward the calling floor in the opposite direction passing it
+    //   c> to turn 2 (opposite of turn 1) and then back to the calling floor
+    //      in the matching direction where it will be serviced
+    //
+
+    // Set turn 1 and 2 to the appropriate shaft ends
+    [cabin high]
+        turn 1, turn2 = top fnum, bottom fnum
+    [cabin low]
+        turn 1, turn2 = bottom fnum, top fnum
+
+    // 2a> Toward turn 1
+    countable aslevs ..= numbered aslevs(Number: cabin floor<>|turn 1)
+    stops += Count stops roundtrip( aslevs: countable aslevs )
+    distance = cabin height.separation( Floor(turn 1).Height ) * 2 + floor gap
+
+    // 2b> From the nearest accessible shaft level to the calling floor
+    countable aslevs ..= numbered aslevs(Number: cabin floor<>|calling fnum)
+    stops += Count stops oneway( aslevs: countable aslevs, search dir: Travel direction.opposite )
+    distance += cabin height.separation( calling height )
+
+    // 2c> To turn 2 and back to the calling floor
+    countable aslevs ..= numbered aslevs(Number: calling floor<>|turn2)
+    stops += Count stops roundtrip( aslevs: countable aslevs )
+    distance += cabin height.separation( Floor(turn2).Height ) * 2
+}
+
+[!dir match][behind the call arrow]{
+    //
+    // Case 3: Cabin is moving oppsosite the calling direction behind the call
+    //
+    // Route:
+    //
+    // a> toward the end of the top or bottom of shaft
+    // b> back twoard the call in the service direction
+    //
+
+    // 3a> To end of shaft and back to the current location
+    [cabin high]
+        turn = top fnum
+    [cabin low]
+        turn = bottom fnum
+
+    countable aslevs ..= numbered aslevs(Number: cabin fnum<>turn)
+    stops += Count stops roundtrip( aslevs: countable aslevs )
+    distance += cabin height.separation( Floor(turn).Height ) * 2
+
+    // 3b> back toward call in service direction
+    countable aslevs ..= numbered aslevs(Number: cabin fnum<>|calling fnum)
+    stops += Count stops oneway( aslevs: countable aslevs, service dir: Travel direction.opposite)
+    distance += cabin height.separation( calling floor height )
+}
+
+[!dir match][!behind the call arrow]{
+    //
+    // Cabin is moving in the opposite direction ahead of the call
+    //
+    // Route:
+    // a> Toward call in opposite direction
+    // b> Toward top or bottom of shaft and back
+
+    // 4a> Toward call in opposite direction
+    countable aslevs ..= numbered aslevs(Number: cabin fnum|<>|calling fnum)
+    stops += Count stops oneway( aslevs: countable aslevs, service dir: Travel direction.opposite)
+    distance += cabin height.separation( calling floor height )
+
+    // 4b> Toward top or bottom of shaft and back
+    [cabin high]
+        turn = bottom fnum
+    [cabin low]
+        turn = top fnum
+
+    countable aslevs ..= numbered aslevs(Number: calling floor<>|turn)
+    stops += Count stops roundtrip( aslevs: countable aslevs )
+    distance += cabin height.separation( Floor(turn).Height ) * 2
+}
+
+transit delay = distance / /R2/R1/Bank.Avg cabin speed
+stop delay = stops * /R2/R1/Bank.Avg stop duration
+
+=>> transit delay + stop delay
+

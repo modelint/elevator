@@ -1,0 +1,23 @@
+//
+// Bank Level.Clear floor request( dir: Direction )
+//
+// The subclass calling up/down request is cleared and the UI is notified.
+
+// Scrall: the system defined _<class>_subclass variable is generated for
+// each superclass as an enumeration of all subclass names
+//
+case ( _subclass name ) {
+    .Top Bank Level:
+        if (in.dir : .down)
+            /R38/Top Bank Level.Calling down.unset
+    .Bottom Bank Level:
+        if (in.dir : .up)
+            /R38/Bottom Bank Level.Calling up.unset
+    .Middle Bank Level:
+        case ( in.dir ) {
+            .up: /R38/Middle Bank Level.Calling up.unset
+            .down: /R38/Middle Bank Level.Calling down.unset
+        }
+}
+
+   UI.Clear floor request( Bank, Floor, in.dir )

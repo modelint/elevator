@@ -1,0 +1,14 @@
+//
+// Cabin.Update location( floor : Level Name )
+//
+// Updates the current location of the cabin as it moves
+// and notifies the UI of the new location
+
+&R43 /R2/R28/Shaft Level( in.Floor ) ; UI.New location( Shaft, floor: Current floor )
+
+// ; symbol is shorthand for typing a guard twice
+// for simple action sequences
+// longhand form is
+//     do x first [done]
+//     [done] do y
+

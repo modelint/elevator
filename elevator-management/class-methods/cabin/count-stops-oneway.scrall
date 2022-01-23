@@ -1,0 +1,14 @@
+//
+// Cabin.Count stops oneway( aslevs: Accessible Shaft Level, search dir: Direction ) : Count
+//
+// Returns the number of Accessible Shaft Levels to be serivced with the Cabin
+// proceeding in the provided search direction
+//
+
+// Count all aslevs with a stop requested or a floor call in the search direction
+//
+=>> ?in.aslevs(Stop requested) + ?(
+    in.aslevs(not Stop requested) ## Floor Service(Direction : in.search dir).(*I) )
+
+// Note: ? is the cardinality (how many?) operator
+// In a projection predicate *I is shorthand for "select all primary ID attrs"
