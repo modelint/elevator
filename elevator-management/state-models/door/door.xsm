@@ -10,25 +10,27 @@ metadata /// Single state machine flatland example
 domain Elevator Application
 class Door
 events
-    *Create( door id: ID, time: Date Time )
+    Door opened
+    Passenger open
+    Passenger close
+    Open delay canceled
     Time to close
-    Door opened( door id: ID, time: Date Time )
+    Hold released
     Door closed
     Lock
     Unlock
-    Cannot close
+    Door blocked
+    Keep trying
+    Emergency hold
+    Cannot close door
 --
-state OPENING *Create
+state OPENING
 activity
     Open door( Shaft ) => SIO
     UI.Door opening( Shaft )
 transitions
     Door opened > OPEN
-    Lock
---
-state OUT OF SERVICE !*
-activity
-    // Wait for service
+    Passenger close > CLOSING
 --
 state OPEN
 activity
@@ -37,7 +39,21 @@ activity
     Time to close -> me after Blocked ?
         my Bank.Block clear time : my Bank.Passenger load time
 transitions
-    Time to close > CLOSING
+    Passenger close > Cancel open delay
+    Time to close > HOLDING OPEN
+--
+state Cancel open delay
+activity
+    Cancel Time to close -> me
+    Open delay canceled -> me
+transitions
+    Open delay canceled > HOLDING OPEN
+--
+state HOLDING OPEN
+activity
+    !Held ? Hold released -> me
+transitions
+    Hold released > CLOSING
 --
 state CLOSING
 activity
@@ -48,6 +64,9 @@ activity
     [Emergency hold] Emergency hold -> me
 transitions
     Door closed > CLOSED
+    Passenger open > OPENING
+    Door blocked > Count block
+    Emergency hold > EMERCENCY HOLD
 --
 state CLOSED
 activity
@@ -58,7 +77,7 @@ activity
     Door closed -> /R4/R53/Transfer // May be none
 transitions
     Lock > LOCKED
-    Cannot close > OUT OF SERVICE
+    Passenger open > OPENING
 --
 state LOCKED
 activity
@@ -68,3 +87,22 @@ activity
 transitions
     Unlock > OPENING
 --
+state Count block
+activity
+    (++Close attempts > /R4/R2/Bank.Max close attempts) ?
+        Can’t close door -> me : Blocked.set; Keep trying -> me
+transitions
+    Keep trying > OPENING
+    Cannot close door > CANNOT CLOSE
+--
+state EMERGENCY HOLD
+activity
+    // Wait for service
+--
+state CANNOT CLOSE
+activity
+    // Take the shaft out of service
+    Take out of service -> /R4/R2/Shaft
+--
+
+

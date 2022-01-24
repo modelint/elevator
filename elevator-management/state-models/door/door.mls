@@ -2,25 +2,36 @@
 diagram state machine
 notation xUML
 presentation default
-orientation portrait
+orientation landscape
 sheet C
 color blue steel
-padding l300 b500
+padding l200 b275
 frame OS Engineer
 frame_presentation default
 nodes
-    OUT OF SERVICE 1,3
-    CLOSING 5,3
-    CLOSED 3,3
-    OPEN 7,3
-    OPENING 9,3
-    LOCKED 7,1
+    OPENING 300% 13,2-4
+    OPEN 11,3
+    Cancel open delay 9,3
+    HOLDING OPEN 100% 7,3
+    CLOSING 120% 4,3-4
+    CLOSED 100% 2,2-3
+    LOCKED 8,1
+    Count block 8,5
+    EMERGENCY HOLD/2 4,5-6 >bottom
+    CANNOT CLOSE 8,7
 connectors
-    b|OUT OF SERVICE
-    +Create : t|OPENING
-    +Door opened : b|OPENING : t*|OPEN
-    +Time to close : b|OPEN : t*|CLOSING
-    +Door closed : b|CLOSING : t*|CLOSED
-    -Lock.2 : l|CLOSED : b|LOCKED
+    +Door opened : b-1|OPENING : t*|OPEN
+    +Passenger close : b*|OPEN : t|Cancel open delay
+    +Open delay canceled : b|Cancel open delay : t*|HOLDING OPEN
+    +Time to close-2 : b-2|OPEN : t*|HOLDING OPEN
+    +Hold released : b-2|HOLDING OPEN : t*|CLOSING
+    +Door closed : b*|CLOSING : t|CLOSED
+    -Passenger close-2 : b+2|OPENING : t*|CLOSING
+    -Lock.2+2 : l|CLOSED : b|LOCKED
     +Unlock.2 : t|LOCKED : l|OPENING
-    +Cannot close : b|CLOSED : t*|OUT OF SERVICE
+    +Passenger open : t-2|CLOSED : b*|OPENING
+    +Passenger open+2 : t+2|CLOSING : b*|OPENING
+    -Door blocked.2 : r|CLOSING : b|Count block
+    +Keep trying.2 : t|Count block : r|OPENING
+    -Emergency hold : r-2|CLOSING : l*|EMERGENCY HOLD
+    +Cannot close door-1 : r|Count block : l*|CANNOT CLOSE
