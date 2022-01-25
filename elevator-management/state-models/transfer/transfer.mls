@@ -1,0 +1,15 @@
+diagram state machine
+notation xUML
+presentation default
+orientation landscape
+sheet D
+color blue steel
+padding l250 b300
+frame OS Engineer
+frame_presentation default
+nodes
+    CREATED 16,3
+    Creating or updating transfer 14,3
+connectors
+    +initial : t|CREATED
+    +Execute : b|CREATED : t*|Creating or updating transfer
