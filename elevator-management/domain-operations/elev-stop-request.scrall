@@ -5,6 +5,9 @@
 // Shaft Level is not accessible or does not exist.
 //
 
-Stop requested -> Accessible Shaft Level( in.shaft, in.floor )
-[empty] =>> false
-[!empty] =>> true
+destination .= Accessible Shaft Level( in.shaft, in.floor )
+Stop requested -> destination
+
+=>> (destination) // false if empty
+// Use of () causes boolean to be returned in this context
+// Otherwise, we would return an instance set

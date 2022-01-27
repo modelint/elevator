@@ -11,5 +11,4 @@ floor calls either dir #= in.aslevs ## Floor Service.(*I)
 stops without calls #= in.aslevs(Stop requested) #- floor calls either dir
 
 // Return the total
-=>> ?floor calls either dir + ?stops without calls
-
+=>> ??floor calls either dir + ??stops without calls

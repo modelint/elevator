@@ -5,8 +5,4 @@
 // Door is not found.
 
 d .= Door( in.shaft )
-if (d) {
-    d.Held.unset
-    =>> true
-} else
-    =>> false
+d? { d.Held.unset;  =>> true } : false

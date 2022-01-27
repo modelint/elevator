@@ -5,10 +5,25 @@
 // proceeding in the provided search direction
 //
 
-// Count all aslevs with a stop requested or a floor call in the search direction
+// Count all aslevs with a stop requested AND
+// all aslevs without a stop requested and a floor call in the search direction
 //
-=>> ?in.aslevs(Stop requested) + ?(
-    in.aslevs(not Stop requested) ## Floor Service(Direction : in.search dir).(*I) )
+=>> ??in.aslevs(Stop requested) +
+        ??in.aslevs(!Stop requested)/R49/Floor Service( Direction: in.search dir)
 
-// Note: ? is the cardinality (how many?) operator
+// Scrall Notes:
+//
+// If we did this with a join operation, it looks like this:
+// + (
+//     ??in.aslevs(!Stop requested) ## Floor Service(Direction : in.search dir).(*I) )
+//
+//
+// The ?? inspection operator returns cardinality when placed before an
+// instance reference set
+//
 // In a projection predicate *I is shorthand for "select all primary ID attrs"
+//
+// We count all input aslevs:
+//     Requesting a stop and
+//     Not requesting a stop, but requesting service in the search direction
+// 

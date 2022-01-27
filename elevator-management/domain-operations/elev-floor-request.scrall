@@ -5,7 +5,6 @@
 // Registers a floor service request and returns the success status
 
 blev .= Bank Level( in.bank, in.floor )
-if (blev)
-    =>> ( new direction: blev.Floor request( in.dir ), Found: true )
-else
+blev?
+    =>> ( new direction: blev.Floor request( in.dir ), Found: true ) :
     =>> ( new direction: false, found: false )

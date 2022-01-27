@@ -6,7 +6,14 @@
 // the Shaft ID of the one with the shortest delay
 
 // Scrall: The 1, in the restriction clause selects at most one
-=>> /R29/R1/Shaft/R2/Cabin(1, ^-Estimate delay( calling floor: Floor, in.service dir ) ).Shaft
+
+=>> /R29/R1/Shaft/R2/Cabin(1, ^-Estimate delay( in.calling floor, in.service dir ) ).Shaft
 
 // A Bank must have at least one Cabin (R1/R2) and each Cabin will report some
 // delay value, so a single Shaft value will always be returned
+
+
+// Scrall Notes
+//
+// The (1, ... ) selection returns zero or one value, so you cannot access an attribute
+// via dot notation unless you are certain there will always be one instance found

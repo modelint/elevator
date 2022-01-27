@@ -11,16 +11,8 @@
 
 // Search in the Cabin's current travel direction
 fwd dest .= Ping( dir: Travel direction )
-[!found] =>> fwd dest
-[found] {
+fwd dest? =>> fwd dest : {
     rev dest .= Ping( dir: Travel direction.opposite )
-    [!found] Travel direction.toggle
+    !rev dest? Travel direction.toggle
     =>> rev dest // Empty if there is no destination in either direction
 }
-
-// Scrall note: I'm trying to move away from if-then's as much as possible to
-// encourage DFD thinking. Still working on defining a consistent set of names
-// for the zero, one, many case. [found] = [!empty] = [one]
-// A guard is always set relative to the nearest action, so the first [!found] is
-// relative to the first Ping while the second is relative to the second Ping
-

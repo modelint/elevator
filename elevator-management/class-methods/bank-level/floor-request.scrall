@@ -1,23 +1,46 @@
 //
-// Bank Level.Clear floor request( dir: Direction )
+// Bank Level.Floor request( dir: Direction ) : Boolean
 //
-// The subclass calling up/down request is cleared and the UI is notified.
+// The associated subclass calling up/down attribute is set to register an up or down call.
+// If floor was not already calling the Shaft most likely to provide the quickest
+// service is chosen and the associated Accessible Shaft Level is notified.
+// Success is returned if the floor was not already registered as calling in the
+// requested service direction.
+//
 
-// Scrall: the system defined _<class>_subclass variable is generated for
-// each superclass as an enumeration of all subclass names
+// Scrall: If a path from a superclass instance to a generalization relationship
+// appears in a case statement, an enumerated type is generated with a value for
+// each subclass name. Also, the "." symbol represents the superclass instance
+// for any path expressions inside the case block.
 //
-case ( _subclass name ) {
+R38? {
     .Top Bank Level:
-        if (in.dir : .down)
-            /R38/Top Bank Level.Calling down.unset
+        // If the dir is not down, it is bad input at the top level
+        calling down!bad input = (in.dir == down)
+        calling down? /R38/Top Bank Level.Calling down.set
     .Bottom Bank Level:
-        if (in.dir : .up)
-            /R38/Bottom Bank Level.Calling up.unset
+        // If the dir is not up, it is bad input at a bottom level
+        calling up!bad input dir = (in.dir == .up)
+        calling up? /R38/Bottom Bank Level.Calling up.set
     .Middle Bank Level:
-        case ( in.dir ) {
-            .up: /R38/Middle Bank Level.Calling up.unset
-            .down: /R38/Middle Bank Level.Calling down.unset
+        bad input.unset // The input is always good here
+        in.dir? {
+            // If middle level, the dir can be up or down
+            // so we set the appropriate request depending on in.dir
+            .up: /R38/Middle Bank Level.Calling up.set
+            .down: /R38/Middle Bank Level.Calling down.set
         }
 }
 
-   UI.Clear floor request( Bank, Floor, in.dir )
+!bad input? {
+    // Notify the Accessible Shaft Level so that it can request service
+    Floor calling( in.dir ) -> 
+        Accessible Shaft Level (Bank, Floor,
+            Shaft: Choose shaft( calling floor: Floor, service dir: in.dir ) )
+    // Note that Choose shaft() is guaranteed to return a valid Shaft ID
+
+=>> !bad input // True if no bad input
+        
+// Scrall Notes:
+//
+// x!y = <boolean expr> sets x to the value of the expr and y to NOT x

@@ -3,21 +3,32 @@
 //
 // The subclass calling up/down request is cleared and the UI is notified.
 
-// Scrall: the system defined _<class>_subclass variable is generated for
-// each superclass as an enumeration of all subclass names
-//
-case ( _subclass name ) {
+R38? {
     .Top Bank Level:
-        if (in.dir : .down)
-            /R38/Top Bank Level.Calling down.unset
+        // If this is a top level and down is requested, clear the down request
+        // set/unset are type specific operators defined on the Boolean type
+        (in.dir == .down) /R38/Top Bank Level.Calling down.unset
     .Bottom Bank Level:
-        if (in.dir : .up)
-            /R38/Bottom Bank Level.Calling up.unset
+        // If this is a bottom level and up is requested, clear the up request
+        (in.dir == .up) /R38/Bottom Bank Level.Calling up.unset
     .Middle Bank Level:
-        case ( in.dir ) {
+        in.dir? {
+            // If this is a middle level and up is requested, clear up
+            // If this is a middle level and down is requested, clear up
             .up: /R38/Middle Bank Level.Calling up.unset
             .down: /R38/Middle Bank Level.Calling down.unset
         }
 }
 
-   UI.Clear floor request( Bank, Floor, in.dir )
+UI.Clear floor request( Bank, Floor, in.dir )
+
+
+// SCRALL Notes:
+//
+// The inspect ? symbol, when placed after a generalization relationship name,
+// yields a case for each subclass name in the generalization.
+// 
+// The ( ) expressions test for a boolean result when they are on the LHS
+//
+// The inspect ? symbol, when placed after a scalar typed as enumeration
+// yields a case for each enumeration value.
