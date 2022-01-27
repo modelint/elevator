@@ -1,0 +1,11 @@
+//
+// ELEV.Floor request( bank : Name, floor : Ordinal, dir : Direction ) :
+//      ( new direction : Boolean, found : Boolean)
+//
+// Registers a floor service request and returns the success status
+
+blev .= Bank Level( in.bank, in.floor )
+if (blev)
+    =>> ( new direction: blev.Floor request( in.dir ), Found: true )
+else
+    =>> ( new direction: false, found: false )

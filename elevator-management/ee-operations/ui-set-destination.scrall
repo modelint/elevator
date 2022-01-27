@@ -1,0 +1,5 @@
+//
+// UI.Set destination( shaft : Nominal, floor : Floor name )
+//
+// Tell the UI that the cabin in this shaft is moving toward this floor destination
+//

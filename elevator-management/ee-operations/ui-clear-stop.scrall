@@ -1,0 +1,6 @@
+//
+// UI.Clear stop( floor : Floor name, shaft : Nominal )
+//
+// Tell the UI that the stop at this shaft and floor has been cleared.
+
+

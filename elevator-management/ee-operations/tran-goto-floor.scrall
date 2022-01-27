@@ -1,0 +1,14 @@
+//
+// TRAN.Goto floor( dest floor : Floor name, shaft : Nominal ) : Boolean
+//
+// This external entity is a proxy for the Transport Domain. The return value
+// represents the success or failure status of the floor service request. If it is
+// physically impossible to make a safe stop at the requested destination, false is
+// returned with no physical effect. If the request can be satisfied, true is returned
+// and the requested transport is commanded and controlled.
+
+// STUB: Since the Transport domain has not yet been developed, this external entity
+// serves as a stub. True is always returned with no physical effect.
+//
+
+=>> true

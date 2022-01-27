@@ -1,0 +1,12 @@
+//
+// ELEV.Hold door open( shaft : Nominal ) : Boolean
+//
+// Sets the requested Door's held status. Returns false if the
+// Door is not found.
+
+d .= Door( in.shaft )
+if (d) {
+    d.Held.set
+    =>> true
+} else
+    =>> false

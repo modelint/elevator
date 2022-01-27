@@ -1,0 +1,8 @@
+//
+// ELEV.Update location( shaft : Nominal, floor: Level Name )
+//
+// The Transport domain has moved the Cabin past the specified floor
+// Calls the associated cabin method
+//
+
+Cabin( in.shaft ).Update location( new location: in.floor )

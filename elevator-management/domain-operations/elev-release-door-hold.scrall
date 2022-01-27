@@ -1,0 +1,12 @@
+//
+// ELEV.Release door hold( shaft : Nominal ) : Boolean
+//
+// Clears the requested Door's held status. Returns false if the 
+// Door is not found.
+
+d .= Door( in.shaft )
+if (d) {
+    d.Held.unset
+    =>> true
+} else
+    =>> false

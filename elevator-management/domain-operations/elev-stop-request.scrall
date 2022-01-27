@@ -1,0 +1,10 @@
+//
+// ELEV.Stop request( shaft : Nominal, floor : Name ) : Boolean
+//
+// Registers a stop request at a Shaft Level. Returns false if the 
+// Shaft Level is not accessible or does not exist.
+//
+
+Stop requested -> Accessible Shaft Level( in.shaft, in.floor )
+[empty] =>> false
+[!empty] =>> true

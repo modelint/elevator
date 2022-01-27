@@ -1,0 +1,6 @@
+//
+// UI.Clear floor request( bank : Name, floor : Name, dir : Direction )
+//
+// Tell the UI that the call request at this bank, floor and direction has been cleared.
+
+

@@ -1,0 +1,10 @@
+//
+// Ordinal.distance(y)
+//
+// Measure the degree of separation between an ordinal value and some
+// other ordinal value y
+//
+
+// return the absolute value of the difference between this value and y's value
+
+=>> abs( value - y.value ) // absolute value of difference
