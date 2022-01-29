@@ -1,34 +1,35 @@
 //
-// Cabin.Ping( dir: Direction ) : Acessible Shaft Level
+// Cabin.Ping( dir: Direction ) : Accessible Shaft Level
 //
 // Search ahead of the Cabin in the indicated direction
 // return the nearest ASL with a stop request and/or a Floor Service calling
 // in that direction. If none is found, return the empty set.
 
 // Get all aslevs that are calling in the search dir or requesting a stop in my shaft
-// and extend with the floor number
-destinations #= /R2/R28/R3/Accessible Shaft Level( Stop requested OR
-    ( /R49/Floor Service, /R49/Floor Service.Direction : in.dir ).(*I) ##
-    Floor.(Name >> Floor, Height)
-)
-// *I1 means project on primary identifier attributes
-// >> means rename Name to Floor
-// So we get table header { Floor, Shaft, Height }
+// and join with the floor class to get distances
+
+shaft aslevs ..= /R2/R28/Shaft Level/R3/Accessible Shaft Level
+requested stops ..= shaft aslevs( Stop requested )
+
+// Join shaft aslevs with related Floor Service instances calling in the ping direction
+requested floors #= shaft aslevs/R49/Floor Service ## \
+                        shaft aslevs(Direction : in.dir ).(Floor Shaft)
+
+// Take the union of requested stops and floors and join with Floor to get heights of each
+destination heights #= (requested stops + requested floors) ## Floor.(Name >> Floor, Height)
 
 // Find all Accessible Shaft Levels ahead of the cabin
 current floor height = /R43/R28/Floor.Height
 in.dir? {
 .up:
-    dests ahead #= destinations( Height >= current floor height )
+    // Get the lowest floor at or above the cabin
+    nearest dest #= destination heights( ^-(Height >= current floor height) )
 .down:
-    dests ahead #= destinations( Height < current floor height )
+    // Get the highest floor below the cabin
+    nearest dest #= destination heights( ^+(Height < current floor height ) )
 }
+// Since you can’t have two floors at the same height for the same shaft, we have
+// at most one row in our table
 
-// Now get the dest with the least distance from the current floor
-best dest #= dests ahead( -^Number.distance(current floor height) )
-// -^ restricts to the least value(s)
-// In this case we can be confident that zero or one tuple is found
-
-// Return tuple converted into an instance of Accessible Shaft Level
-// Returns an empty instance set if no tuple
-=>> Accessible Shaft Level( Floor: best dest.Floor, Shaft: best dest.Shaft )
+// Convert to either zero or one instance of ASLEV class and provide as output
+=>> Accessible Shaft Level( Floor: nearest dest.Floor, Shaft: nearest dest.Shaft )
