@@ -2,9 +2,9 @@ metadata
     Title : Elevator Management Class Model
     Author : Leon Starr
     Document ID : mint.elevator3.td.1
-    Version : 3.3.0
+    Version : 3.3.1
     /// Creation date : June 21, 2018
-    Modification date : January 23, 2022
+    Modification date : February 8, 2022
     Organization : Model Integration, LLC / www.modelint.com
     Copyright notice > MIT
     Organization logo > mint
@@ -111,8 +111,8 @@ attributes
 --
 class Transfer
 attributes
-    Destination floor {I, R53}
-    Shaft {I2, R53}
+    Shaft {I, R53}
+    Destination floor {R53}
 --
 relationships
     R1
