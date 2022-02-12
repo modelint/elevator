@@ -2,7 +2,7 @@ metadata
     Title : Elevator Management Class Model
     Author : Leon Starr
     Document ID : mint.elevator3.td.1
-    Version : 3.3.2
+    Version : 3.3.3
     /// Creation date : June 21, 2018
     Modification date : February 12, 2022
     Organization : Model Integration, LLC / www.modelint.com
@@ -77,10 +77,10 @@ attributes
 --
 class Floor Service
 attributes
-    Bank {I, R49}
     Floor {I, R49}
     Shaft {I, R49}
     Direction : Direction {I}
+    Bank {R49}
 --
 class Middle Bank Level
 attributes
