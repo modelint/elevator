@@ -37,4 +37,3 @@ connectors
     -R53.2 : -/1 r|Accessible Shaft Level : -/2 t-1|Cabin, b|Transfer
     -R38 : r|Bank Level { l|Top Bank Level, l|Middle Bank Level, l|Bottom Bank Level }
     -R55.2 : -/1 l+1|Floor : +/1 t-1|Floor, b|Floor Order : L1R+1 L10R+1
-    +R57.3 : -/1 b+2|Shaft : +/1 r-2|Shaft : L1R-2 L11R-2

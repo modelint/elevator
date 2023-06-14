@@ -74,7 +74,7 @@ attributes
 class Floor
 attributes
     Name : Level Name {I}
-    Height : Distance {I2}
+    Height : Distance {I2, OR57}
 --
 class Floor Order
 attributes
@@ -98,7 +98,6 @@ attributes
 class Shaft
 attributes
     ID : Shaft ID {I}
-    Number : Ordinal {I2, OR57}
     Bank {R1}
     In service : Boolean
 --
@@ -181,8 +180,4 @@ relationships
     is higher than, 1c Floor
     is lower than, 1c Floor
     1 Floor Order
---
-    R57
-    is after, 1 Shaft
-    is before, 1 Shaft
 --
