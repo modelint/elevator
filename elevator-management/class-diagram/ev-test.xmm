@@ -74,7 +74,7 @@ attributes
 class Floor
 attributes
     Name : Level Name {I}
-    Height : Distance {I2, OR57}
+    Height : Distance {I2, OR7}
 --
 class Floor Order
 attributes
