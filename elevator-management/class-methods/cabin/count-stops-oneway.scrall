@@ -8,8 +8,8 @@
 // Count all aslevs with a stop requested AND
 // all aslevs without a stop requested and a floor call in the search direction
 //
-=>> ??in.aslevs(Stop requested) +
-        ??in.aslevs(!Stop requested)/R49/Floor Service( Direction: in.search dir)
+=>> ??^aslevs(Stop requested) +
+        ??^aslevs(!Stop requested)/R49/Floor Service( Direction: ^search dir)
 
 // Scrall Notes:
 //
