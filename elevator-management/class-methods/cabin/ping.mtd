@@ -21,10 +21,10 @@ current floor height = /R43/R28/Floor.Height
 ^dir? {
     _up:
         // Get the lowest floor at or above the cabin
-        nearest dest ||= destination heights(1, ^-Height >= current floor height)
+        nearest dest ||= destination heights(Height >= current floor height)(1, ^-Height)
     _down:
         // Get the highest floor below the cabin
-        nearest dest ||= destination heights(1, ^+Height < current floor height)
+        nearest dest ||= destination heights(Height < current floor height)(1, ^+Height)
 }
 // Since you can’t have two floors at the same height for the same shaft, we have
 // at most one row in our table, nonetheless we set cardinality to 1
@@ -32,3 +32,4 @@ current floor height = /R43/R28/Floor.Height
 
 // Convert to either zero or one instance of ASLEV class and provide as output
 =>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )
+
