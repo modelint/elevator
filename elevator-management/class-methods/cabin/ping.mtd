@@ -1,5 +1,5 @@
 --
-Cabin.Ping( dir: Direction ) : Accessible Shaft Level
+Cabin.Ping( dir: Direction ) : Accessible Shaft Level, 1
 --
 
 //
@@ -14,7 +14,7 @@ stop here floors #= shaft aslevs( Stop requested ).Floor
 calling floors #= shaft aslevs/R49/Floor Service(Direction : ^dir ).Floor
 
 // Take the union of all requests and join with Floor to get a table of heights for each
-destination heights #= ((stop here floors + calling floors) ## Floor[Name >> Floor])
+destination heights #= (stop here floors + calling floors) ## Floor[Name >> Floor]
 
 // Find all Accessible Shaft Levels ahead of the cabin
 current floor height = /R43/R28/Floor.Height

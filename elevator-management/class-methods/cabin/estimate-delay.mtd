@@ -1,0 +1,107 @@
+--
+Cabin.Estimate delay( calling floor : Level Name, call dir : Direction ) : Duration
+--
+
+calling floor name, calling height = Floor( Name: ^calling floor ).(Name, Height)
+cabin floor name, cabin height = /R43/R28/Floor.(Name, Height)
+
+all serviceable floors #= /R2/R28/Shaft Level/R3/Accessible Shaft Level ## Floor[Name >> Floor]
+top floor height = all serviceable floors(1, ^+Height).Height
+bottom floor height = all serviceable floors(1, ^-Height).Height
+floor gap = Building(1).Average floor gap
+
+calling up, calling down = ^call dir == _up
+cabin high, cabin low = cabin height > calling height
+
+behind the call arrow = ( cabin low AND calling up ) OR ( cabin high AND calling down )
+dir match = Travel direction == ^call dir
+
+cabin height < calling height?
+
+dir match AND behind the call arrow? {
+    cabin height < calling height?
+        countable aslevs::Accessible Shaft Level ..= all serviceable floors( Height <= calling height and Height >= cabin height ) :
+        countable aslevs::Accessible Shaft Level ..= all serviceable floors( Height <= cabin height and Height >= calling height )
+    num stops = .Count stops oneway( aslevs: countable aslevs, search dir: Travel direction )
+    distance = cabin height - calling height
+}
+
+dir match AND NOT behind the call arrow? {
+    cabin high ? turn1, turn2 = top floor height, bottom floor height :
+        turn1, turn2 = bottom floor height, top floor height
+
+    // 2a> Toward turn 1
+    cabin height < calling height?
+        countable aslevs to turn1::Accessible Shaft Level ..= all serviceable floors(Height < cabin height AND Height >= turn1) :
+        countable aslevs to turn1::Accessible Shaft Level ..= all serviceable floors(Height > cabin height AND Height <= turn1)
+    num turn1 stops = .Count stops roundtrip( aslevs: countable aslevs to turn1 )
+    turn1 roundtrip distance = (cabin height - turn1) * Integer[2] + floor gap
+
+    // 2b> From the nearest accessible shaft level to the calling floor
+    cabin height < calling height?
+        countable aslevs to calling floor reverse::Accessible Shaft Level ..= all serviceable floors(Height > cabin height AND Height <= calling height ) :
+        countable aslevs to calling floor reverse::Accessible Shaft Level ..= all serviceable floors(Height < cabin height AND Height >= calling height )
+    num reverse to calling floor stops = .Count stops oneway( aslevs: countable aslevs to calling floor reverse, search dir: Travel direction.opposite )
+    distance to calling floor reverse = cabin height.separation(calling height)
+
+    // 2c> To turn 2 and back to the calling floor
+    cabin height < calling height?
+        countable aslevs to turn2::Accessible Shaft Level ..= all serviceable floors( Height > calling height and Height <= turn2 ) :
+        countable aslevs to turn2::Accessible Shaft Level ..= all serviceable floors( Height < calling height and Height >= turn2 )
+
+    // Tally up the stops and total distance for all legs
+    num turn2 stops = .Count stops roundtrip( aslevs: countable aslevs to turn2 )
+    turn2 roundtrip distance = (cabin height - turn2) * Integer[2]
+}
+
+NOT dir match AND behind the call arrow? {
+    cabin high? turn = top floor height :
+        turn = bottom floor height
+
+    // 3a> To end of shaft and back to the current location
+    cabin height > calling height?
+        countable aslevs to turn::Accessible Shaft Level ..= all serviceable floors( Height > cabin height and Height < turn ) :
+        countable aslevs to turn::Accessible Shaft Level ..= all serviceable floors( Height < cabin height and Height > turn )
+    num turn stops = .Count stops roundtrip( aslevs: countable aslevs to turn )
+    turn roundtrip distance = (cabin height - turn) * Integer[2]
+
+    // 3b> back toward call in service direction
+    cabin height > calling height?
+        countable aslevs to calling floor::Accessible Shaft Level ..= all serviceable floors( Height >= cabin height and Height < turn ) :
+        countable aslevs to calling floor::Accessible Shaft Level ..= all serviceable floors( Height <= cabin height and Height > turn )
+    num stops to calling floor = .Count stops oneway( aslevs: countable aslevs to calling floor, search dir: Travel direction.opposite )
+    reverse distance to calling floor = cabin height - calling height
+
+    // Tally up the stops and total distance for all legs
+    num stops = num turn stops + num stops to calling floor
+    distance = turn roundtrip distance + reverse distance to calling floor
+}
+
+NOT dir match AND NOT behind the call arrow? {
+    // 4a> Toward call in opposite direction
+    cabin height > calling height?
+        countable aslevs to calling floor reverse4::Accessible Shaft Level ..= all serviceable floors( Height >= cabin height and Height <= calling height ) :
+        countable aslevs to calling floor reverse4::Accessible Shaft Level ..= all serviceable floors( Height <= cabin height and Height >= calling height )
+    num reverse to calling floor stops4 = .Count stops oneway( aslevs: countable aslevs to calling floor reverse4, search dir: Travel direction.opposite )
+    distance to calling floor reverse4 = cabin height - calling height
+
+    // 4b> Toward top or bottom of shaft and back
+    cabin high? turn4 = bottom floor height :
+        turn4 = top floor height
+
+    cabin height > calling height?
+        countable aslevs to turn4::Accessible Shaft Level ..= all serviceable floors( Height > calling height and Height <= turn ) :
+        countable aslevs to turn4::Accessible Shaft Level ..= all serviceable floors( Height < calling height and Height >= turn )
+    num stops to turn = .Count stops roundtrip( aslevs: countable aslevs to turn4 )
+    distance to turn = (cabin height - turn) * Integer[2]
+
+    // Tally up the stops and total distance for all legs
+    num stops4 = num reverse to calling floor stops4 + num stops to turn
+    distance4 = distance to calling floor reverse4 + distance to turn
+
+    // Compute total delays due to distance traveled and number of stops
+        transit delay = distance4 / /R2/R1/Bank.Average cabin speed
+        stop delay::Duration = num stops4 * /R2/R1/Bank.Average stop duration
+}
+
+=>> transit delay + stop delay

@@ -1,5 +1,7 @@
-//
-// Cabin.Ping both ways() : Acessible Shaft Level
+--
+Cabin.Ping both ways() : Accessible Shaft Level, 1
+--
+
 //
 // Search ahead of the Cabin in the indicated direction
 // return the nearest ASL with a stop request and/or a Floor Service calling
@@ -8,11 +10,11 @@
 // an empty set.
 //
 
-
-// Search in the Cabin's current travel direction
-fwd dest .= Ping( dir: Travel direction )
+my direction = Travel direction
+fwd dest .= .Ping( dir: my direction )
 fwd dest? =>> fwd dest : {
-    rev dest .= Ping( dir: Travel direction.opposite )
-    !rev dest? Travel direction.toggle
-    =>> rev dest // Empty if there is no destination in either direction
+    my opposite direction = my direction.opposite
+    rev dest .= .Ping( dir: my opposite direction )
+    !rev dest? Travel direction = my opposite direction
+    =>> rev dest
 }

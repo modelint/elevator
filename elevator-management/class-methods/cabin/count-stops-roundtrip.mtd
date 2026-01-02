@@ -1,14 +1,14 @@
-//
-// Cabin.Count stops roundtrip( aslevs: Accessible Shaft Level ) : Count
-//
+--
+Cabin.Count stops roundtrip( aslevs: Accessible Shaft Level ) : Count
+--
 // Returns the number of Accessible Shaft Levels to be serviced with the
 // Cabin passing in both directions
 
 // Count all floor service calls in either direction
-floor calls either dir #= in.aslevs ## Floor Service.(*I)
+floor calls either dir #= ^aslevs ## Floor Service.(Floor, Shaft, Bank)
 
 // Count all stop requests with no floor calls
-stops without calls #= in.aslevs(Stop requested) #- floor calls either dir
+stops without calls #= ^aslevs(Stop requested) - floor calls either dir
 
 // Return the total
 =>> ??floor calls either dir + ??stops without calls
