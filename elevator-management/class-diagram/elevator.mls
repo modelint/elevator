@@ -3,9 +3,9 @@ notation Starr
 presentation default
 orientation landscape
 color blue steel
-sheet C
-padding l200 b400
-frame OS Engineer
+sheet A2
+padding l50 b50
+frame Model Integration Diagram
 frame_presentation default
 nodes
     Shaft Level 3,3
@@ -29,6 +29,7 @@ connectors
     -R4 : +/2 t+1|Cabin : +/2 b*|Door
     -R5 : -/1 r+2|Top Bank Level : -/2 l*|Bank
     -R6.2 : +/1 r|Bottom Bank Level : -/2 b-1|Bank
+    +OR7.2-1 : +/1 t-2|Floor : -/1 l+2|Floor : L10 L1R+2
     -R28.2 : -/2 b|Floor : -/2 l|Shaft, b|Shaft Level
     +R29 : +/1 r+1|Floor : +/1 l*|Bank, t|Bank Level
     +R43 : +/1 r|Shaft Level : +/1 l*|Cabin
