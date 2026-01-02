@@ -1,0 +1,18 @@
+diagram state machine
+notation xUML
+presentation default
+orientation landscape
+sheet A3
+color blue steel
+padding l150 b150
+frame Model Integration Diagram
+frame_presentation default
+nodes
+    WAITING FOR CALL 3,2
+    Select cabin 1,2
+    Clear request 5,2
+connectors
+    -Floor requested : b|WAITING FOR CALL : t*|Select cabin
+    -Clear floor request : t|WAITING FOR CALL : b*|Clear request
+    +Cabin selected.3 : r|Select cabin : r|WAITING FOR CALL : L3
+    +Request cleared.3 : l|Clear request : l|WAITING FOR CALL : L1
