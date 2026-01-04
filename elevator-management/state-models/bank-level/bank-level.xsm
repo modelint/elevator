@@ -3,8 +3,8 @@ metadata
     Author : Leon Starr
     Document ID : mint.elevator3.td.5
     Creation date : November 4, 2025
-    Modification date : January 2, 2026
-    Version : 0.2.0
+    Modification date : January 4, 2026
+    Version : 0.2.1
     Organization : Model Integration, LLC
     Copyright notice > MIT
     Organization logo > mint
@@ -39,7 +39,7 @@ activity
                 _down: /R38/Middle Bank Level.Calling down.set
             }
     }
-    //    Floor calling( ^dir ) -> Accessible Shaft Level(Bank; Floor; shaft: .Choose shaft(calling floor: Floor, service dir: ^dir) )
+    Floor calling( ^dir ) -> Accessible Shaft Level(Bank; Floor; shaft: .Choose shaft(calling floor: Floor, service dir: ^dir) )
     Cabin selected -> me
 transitions
     Cabin selected > WAITING FOR CALL
