@@ -1,0 +1,11 @@
+# Here we have information about the overall System
+
+Domains:
+
+  # First listed is the application domain, the main purpose of the system
+  - Elevator Management, EVMAN  # Name, Alias
+
+  # The rest are service domains, supporiting the application directly or indirectly
+  - User Interface, UI
+  - Transport, TRANS
+  - Signal IO, SIO

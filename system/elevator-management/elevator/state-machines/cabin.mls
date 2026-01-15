@@ -1,0 +1,39 @@
+diagram state machine
+notation xUML
+presentation default
+orientation landscape
+sheet A2
+color blue steel
+padding l300 b150
+frame Model Integration Diagram
+frame_presentation default
+nodes
+    Notify transfer 10,4
+    SECURING DOORS 70% 3,2 >left
+    READY TO GO 100% 1,1-2
+    Are we already there? 20% 5,2-3
+    PICKUP DROPOFF 7-8,2 >left
+    Set emergency stop 6,4-5
+    OUT OF SERVICE 100% 4,5
+    EMERGENCY BRAKING 8-9,4-5
+    MOVING 100% [C1]100% 11,2
+    Request destination 12,4
+    Requesting transport 30% 13,2-3
+connectors
+    +Transfer notified.2 : l|Notify transfer : b+2|MOVING
+    +Destination update : r-2|MOVING : t-1|Notify transfer
+    +Doors secure : b|SECURING DOORS : t*|READY TO GO
+    +Prepare to move : b*|Are we already there? : t|SECURING DOORS
+    +New transfer : b+1|PICKUP DROPOFF : t*|Are we already there?
+    -Already there+1 : t*|Are we already there? : b-1|PICKUP DROPOFF
+    -Take out of service.2+2 : r|SECURING DOORS : b-1|OUT OF SERVICE
+    +Take out of service.2+2 : r|READY TO GO : b+1|OUT OF SERVICE
+    -Cabin stopping.2-1 : b|EMERGENCY BRAKING : t*|Set emergency stop
+    -Arrived at floor.2-1 : b*|Set emergency stop : t-2|OUT OF SERVICE
+    +Take out of service.2 : b+1|MOVING : l|EMERGENCY BRAKING
+    -Arrived at floor-2 : b|MOVING : t*|PICKUP DROPOFF
+    +Try redirect.2-1 : t+2|MOVING : l|Request destination
+    +Change requested.2-2 : b-1|Request destination : r+1|MOVING
+    +Transport unavailable.2 : r|MOVING : t+2|OUT OF SERVICE
+    -Transport in progress.2 : b*|Requesting transport : t|MOVING
+    +Go.2 : t-2|READY TO GO : l|Requesting transport
