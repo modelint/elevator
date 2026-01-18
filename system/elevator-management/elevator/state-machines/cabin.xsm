@@ -2,8 +2,8 @@ metadata
     Title : Cabin State Machine Diagram
     Author : Leon Starr
     Document ID : mint.elevator3.td.6
-    Modification date : January 9, 2026
-    Version : 3.4.1
+    Modification date : January 16, 2026
+    Version : 3.5.1
     Organization : Model Integration, LLC
     Copyright notice > MIT
     Organization logo > mint
@@ -24,6 +24,16 @@ events
     Go
     Transfer notified
     Destination update
+    Passing floor
+    Location updated
+--
+state Update location( floor: Level Name )
+activity
+    &R43 /R2/R28/Shaft Level(1, ^floor )
+    New location( ^floor) -> ~UI
+    Location updated -> me
+transitions
+    Location updated > MOVING
 --
 state Notify transfer( new dest: Level Name )
 activity
@@ -96,6 +106,7 @@ transitions
     Try redirect > Request destination
     Destination update > Notify transfer
     Transport unavailable > OUT OF SERVICE
+    Passing floor > Update location
 --
 state Requesting transport
 activity
