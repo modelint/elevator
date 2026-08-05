@@ -46,7 +46,7 @@ sync is manual.
 
 ### Branch
 
-Active work is on **`prep-for-execution`**, not `main`.
+Active work is on **`refine`**, not `main`.
 
 ## Model content structure
 
