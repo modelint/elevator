@@ -8,7 +8,7 @@ So this case study is for education, tool demos, and as an architectural punchin
 
 ## Start with the wiki
 
-The [wiki](https://github.com/modelint/elevator/wiki) is the front door. It walks through the system class by class and relationship by relationship, with the diagrams rendered for reading. Come back to this repository when you want the underlying model source.
+The [wiki](https://github.com/modelint/elevator/wiki) walks you through each of the domains and models class by class and relationship by relationship, with the diagrams rendered for reading. This repository manages the underlying model source.
 
 ## What's in this repository
 
