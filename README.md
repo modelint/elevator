@@ -1,15 +1,8 @@
-# elevator
-Educational case study to see how xUML (Executable UML) is used to define a skyscraper elevator application
-This set of models represents the 3rd release of this case study that I originally created in the mid-90's.
-The latest release Elevator 3 was completed back in 2017, but was never published. I am finally getting around
-to making these models available in a public repository under the MIT open source license.
+# The Elevator Case Study
 
-In the process of this latest effort, I will be updating some of the action language to make it compliant with
-the latest version of Scrall and fixing a thing here and there.
+I designed the Elevator Case Study as a teaching example to use in my systems engineering and modeling classes and I reference it thorughout the Blueprint modeling tool documentation. I wanted an example more complicated and real world than the usual toy examples I often see in tool demos. At the same time, I keep the functionality basic so we can focus on the principles. And I chose an elevator application so that you can spend more time on the modeling lessons and not so much on learning a new system. Many of us have experience interacting with such systems in our daily life. But, yes, I know (and hope) you are working on something far more complex, challenging, and potentially hazardous than this!
 
-The purpose of these models is to demonstrate how a semi-realistic system can be modeled with xUML / Executable UML
-and used to generate code and interface with modeled or non-modeled domains. The code generation methodology is explained
-in the book [Models to Code](https://modelstocode.com), Starr, Mangogna, Mellor, Apress 2017. You can find it on Amazon.
+I also challenge my clients and students to think about how they would build this system differently, especially with the incoporation of AI. I do have a video lesson in the works on my youtube channel where I point out some key modeling
+decisions that take AI into account.
 
-
-
+So this case study is for education, tool demos, and as an architectural punching bag to contrast large and small scale modeling decisions.
