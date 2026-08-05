@@ -10,10 +10,11 @@ metadata
     Organization logo > mint
 domain Elevator Management
 class Bank Level
-events
+interaction events
     Floor requested
-    Cabin selected
     Clear floor request
+completion events
+    Cabin selected
     Request cleared
 --
 state WAITING FOR CALL
