@@ -1,3 +1,37 @@
+# Ignore PyCharm project files
+.idea/
 
-.DS_Store
+# Ignore any user-specific PyCharm files
+*.iml
+
+# Ignore Claude Code files
+.claude/
+
+# Ignore Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore Virtual Environment directories
+venv/
+.env/
+.venv/
+
+# Ignore log and temporary files
 *.swp
+
+# Ignore MacOS Finder metadata files
+.DS_Store
+
+# Ignore distribution/build files
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Ignore working directory
+working/
+
+# Ignore log files
+*.log
