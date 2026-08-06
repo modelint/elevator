@@ -74,15 +74,18 @@ Within `elevator/elevator-management/elevator/`:
 | `methods/<class>/` | class methods, one file each |
 | `external/external.yaml` | the domain's external boundary — events and operations crossing to UI/TRANS/SIO |
 | `external/mark.yaml` | implicit bridges — attribute-to-attribute mappings and state entries that raise events in an external domain |
-| `deprecated/` | superseded `.scrall` domain/EE operations, kept for reference — do not treat as current |
 | `collaboration-diagram/` | class collaboration diagram |
+| `docs/` | everything that is *not* model source: `technical-notes/` (algorithm write-ups) and `population/` (initial instance populations for execution scenarios) |
 
-`elevator/elevator-management/population/` holds initial instance populations for execution
-scenarios.
+`docs/` is the designated home for non-model material within a subsystem. Put new notes, sketches,
+and spreadsheets there rather than beside the model files.
 
 Only `class-model/`, `state-machines/`, `methods/`, and `external/` have counterparts in
-`xuml-populate`; `collaboration-diagram/`, `deprecated/`, `population/`, `transport/`, and `ui/` are
-specific to this repository.
+`xuml-populate`; `collaboration-diagram/`, `docs/`, `transport/`, and `ui/` are specific to this
+repository.
+
+A `deprecated/` folder of superseded `.scrall` domain/EE operations was removed in `c822f7c`. Leon
+kept a copy outside the repo; the history is in git, not on disk.
 
 ## File formats
 
@@ -162,10 +165,14 @@ When a model change breaks population, that shows up in `xuml-populate`, not her
 The repo predates most of the toolchain and has drifted. Do not assume existing structure is
 intentional:
 
-- Root-level `technical-notes/` and `td-8-domain-diagram.pdf` sit outside `elevator/` and overlap
-  `elevator/ui/technical-notes/` — two conventions, unreconciled.
-- `deprecated/` holds `.scrall` operations superseded by the `.mtd` methods. Their fate is an open
-  question, not a settled decision.
+- **The wiki's links into this repository are almost all dead.** They hardcode
+  `github.com/modelint/elevator/blob/main/<path>`, and the reorganizations moved nearly every
+  target. Of 26 such links, 25 are broken — some by the `system/` -> `elevator/` rename, others
+  by much older moves. Only `td-8-domain-diagram.pdf` still resolves. Fixing these means editing
+  the wiki repo, not this one.
+- `td-8-domain-diagram.pdf` still sits at the repo root rather than in a `docs/` folder.
+- The UI domain keeps its notes at `elevator/ui/technical-notes/`, not `elevator/ui/docs/
+  technical-notes/`, so it does not yet follow the `docs/` convention established in `c822f7c`.
 - Method directories are named for the class with a space (`methods/bank level`), matching
   `xuml-populate`. State machine *files* keep the hyphenated form (`bank-level.xsm`) — the two
   conventions coexist deliberately, so do not "correct" either to match the other.

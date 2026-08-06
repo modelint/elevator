@@ -19,7 +19,7 @@ The models are text, not tool binaries. Every diagram you see is generated from 
 - **Elevator Management** — the application domain, modeled in full
 - **User Interface**, **Transport**, **Signal IO** — service domains, specified only at the boundary where Elevator Management meets them
 
-Under `elevator/elevator-management/elevator/` you will find the class model, a state machine for each class with a lifecycle, the class methods, and an `external/` specification of the events and operations that cross the domain boundary. `technical-notes/` holds the write-ups of the floor search and bank selection algorithms.
+Under `elevator/elevator-management/elevator/` you will find the class model, a state machine for each class with a lifecycle, the class methods, and an `external/` specification of the events and operations that cross the domain boundary. Alongside them, `docs/` holds the supporting material that is not itself model source — technical notes working through the floor search and bank selection algorithms, and the initial instance populations used to set up execution scenarios.
 
 ## License
 
