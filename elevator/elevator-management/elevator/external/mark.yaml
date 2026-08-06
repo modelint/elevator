@@ -1,0 +1,31 @@
+Implicit:
+  attribute to attribute:
+    # Local attribute mapped to attribute in external domain
+    # Each holds the same value
+    class: Cabin
+    attr: Curent height
+    to: SIO
+    external class: Input Point
+    external attr: Value
+  state entry to event:
+    # Local entry into state causes event in external domain
+    - class: Accessible Shaft Level
+      state: Clear stop request  # No event specified, so event is the same as state name
+      to: UI
+      # responses:  You can insert a list of expected responses also
+    - class: Door
+      state: OPENING
+      event: Door opening  # Implicit event name
+      to: [UI, SIO]  # Can cause event in more than one external domain
+    - class: Door
+      state: OPEN
+      event: Door open
+      to: UI
+    - class: Door
+      state: CLOSING
+      event: Door closing
+      to: [UI, SIO]
+    - class: Door
+      state: CLOSED
+      event: Door closed
+      to: UI

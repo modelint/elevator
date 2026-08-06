@@ -16,20 +16,22 @@ calling floors #= shaft aslevs/R49/Floor Service(Direction : ^dir ).Floor
 // Take the union of all requests and join with Floor to get a table of heights for each
 destination heights #= (stop here floors + calling floors) ## Floor[Name >> Floor]
 
-// Find all Accessible Shaft Levels ahead of the cabin
-current floor height = /R43/R28/Floor.Height
-^dir? {
-    _up:
-        // Get the lowest floor at or above the cabin
-        nearest dest ||= destination heights(Height >= current floor height)(1, ^-Height)
-    _down:
-        // Get the highest floor below the cabin
-        nearest dest ||= destination heights(Height < current floor height)(1, ^+Height)
-}
-// Since you can’t have two floors at the same height for the same shaft, we have
-// at most one row in our table, nonetheless we set cardinality to 1
-// to clarify that we have a single tuple result
+destination heights? {
+    // Find all Accessible Shaft Levels ahead of the cabin
+    current floor height = /R43/R28/Floor.Height
+    ^dir? {
+        _up:
+            // Get the lowest floor at or above the cabin
+            nearest dest ||= destination heights(Height >= current floor height)(1, ^-Height)
+        _down:
+            // Get the highest floor below the cabin
+            nearest dest ||= destination heights(Height < current floor height)(1, ^+Height)
+    }
+    // Since you can’t have two floors at the same height for the same shaft, we have
+    // at most one row in our table, nonetheless we set cardinality to 1
+    // to clarify that we have a single tuple result
 
-// Convert to either zero or one instance of ASLEV class and provide as output
-=>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )
+    // Convert to either zero or one instance of ASLEV class and provide as output
+    =>> Accessible Shaft Level( Floor: nearest dest.Floor; Shaft )
+ } : =>> Accessible Shaft Level(0)
 

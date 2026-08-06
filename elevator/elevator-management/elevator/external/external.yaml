@@ -1,66 +1,36 @@
-Domains:
 External Entities:
+  # Specify each External Entity
   UI:
-    service domain: User Interface
-    external events:
+    service domain: User Interface  # EE is a proxy for interaction with this Domain
+    external events: # Events explicitly directed at the External Entity
+      - name: Set destination
+        parameters:
+          dest: Level Name
       - name: Clear floor request
         parameters:
-          - name: bank
-            type: Bank Name
-          - name: floor
-            type: Level Name
-          - name: dir
-            type: Direction
+          bank: Bank Name
+          floor: Level Name
+          dir: Direction
       - name: Cabin arrived
         parameters:
-          - name: shaft
-            type: Shaft ID
-          - name: direction
-            type: Direction
+          shaft: Shaft ID
+          direction: Direction
+      - name: Passing floor
+        parameters:
+          floor: Level Name
 
   TRANS:
     service domain: Transport
-# Below ext op for reference only since there are currently one in the elevator
-#    external operations:
-#      - name: Get eta
-#        parameters:
-#          - name: target
-#            type: Level Name
-#        type: Duration
     external events:
       - name: Stop at nearest floor
       - name: Go to floor
         parameters:
-          - name: dest floor
-            type: Level Name
+          dest floor: Level Name
         responses:
           - state model: Cabin
             name: Arrived at floor
           - state model: Cabin
             name: Transport unavailable
-
-Implicit:
-  Door:
-    bridgeable conditions:
-      state entry:
-        OPENING:
-          - SIO
-          - UI
-        OPEN:
-          - UI
-        CLOSING:
-          - SIO
-          - UI
-        CLOSED:
-          - UI
-      external event:
-        Cabin arrived: UI
-        Stop at nearest floor: TRANS
-
-    model operations:
-      event dispatch:
-        Door closed: SIO
-        Door opened: SIO
-        Door blocked: SIO
-        Passenger open: UI
-        Passenger close: UI
+  SIO:
+    service domain: Signal IO
+    # All interactions are implicit
