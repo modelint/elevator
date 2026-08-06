@@ -2,15 +2,15 @@ metadata
     Title : Elevator Management Class Model
     Author : Leon Starr
     Document ID : mint.elevator3.td.1
-    Version : 3.4.0
+    Version : 3.4.1
     Creation date : June 21, 2018
-    Modification date : January 2, 2025
+    Modification date : June 22, 2026
     Organization : Model Integration, LLC / www.modelint.com
     Copyright notice > MIT
     Organization logo > mint
 domain Elevator Management, EVMAN
 subsystem Elevator, ELEV 1-99
-class Accessible Shaft Level
+class Accessible Shaft Level, ASLEV
 attributes
     Floor : Level Name {I, R3}
     Shaft : Shaft ID {I, R3}
@@ -26,12 +26,12 @@ attributes
     Average cabin speed : Speed
     Average stop duration : Duration
 --
-class Bank Level
+class Bank Level, BLEV
 attributes
     Bank : Bank Name {I, R29}
     Floor : Level Name {I, R29}
 --
-class Bottom Bank Level
+class Bottom Bank Level, B_BLEV
 attributes
     Bank : Bank Name {I, R38, R6}
     Floor : Level Name {I, R38}
@@ -70,7 +70,7 @@ attributes
     Direction : Direction {I, I2}
     Bank : Bank Name {I2, R49}
 --
-class Middle Bank Level
+class Middle Bank Level, M_BLEV
 attributes
     Bank : Bank Name {I, R38}
     Floor : Level Name {I, R38}
@@ -83,23 +83,21 @@ attributes
     Bank : Bank Name {R1}
     In service : Boolean
 --
-class Shaft Level
+class Shaft Level, SLEV
 attributes
     Floor : Level Name {I, R28}
     Shaft : Shaft ID {I, R28}
 --
-class Top Bank Level
+class Top Bank Level, T_BLEV
 attributes
     Bank : Bank Name {I, R38, R5}
     Floor : Level Name {I, R38}
     Calling down : Boolean
 --
-class Transfer
+class Transfer, XFER
 attributes
     Shaft : Shaft ID {I, R53}
     Destination floor : Level Name {R53}
-    Tint : Dark_Medium_Light
-    Color : Color Name = red
 --
 relationships
     R1
