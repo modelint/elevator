@@ -128,6 +128,15 @@ between releases. `xsm -t` always writes `<name>.md` beside the source. Flatland
 deterministic, so regenerating an unchanged model produces a byte-identical PDF and no git diff —
 a PDF that *does* show a diff means the model genuinely changed.
 
+`tools/check-wiki-links.sh` verifies that every wiki link into this repo still resolves. It checks
+against a *branch*, not the working tree, since that is what a reader following the link gets — so
+run it after pushing, and pass a branch that is ahead to preview the result of a fast-forward:
+
+```
+tools/check-wiki-links.sh                          # against main
+tools/check-wiki-links.sh working/elevator.wiki refine
+```
+
 Flatland fails hard when a model and its layout disagree, e.g.
 
 ```
@@ -165,11 +174,11 @@ When a model change breaks population, that shows up in `xuml-populate`, not her
 The repo predates most of the toolchain and has drifted. Do not assume existing structure is
 intentional:
 
-- **The wiki's links into this repository are almost all dead.** They hardcode
-  `github.com/modelint/elevator/blob/main/<path>`, and the reorganizations moved nearly every
-  target. Of 26 such links, 25 are broken — some by the `system/` -> `elevator/` rename, others
-  by much older moves. Only `td-8-domain-diagram.pdf` still resolves. Fixing these means editing
-  the wiki repo, not this one.
+- The wiki hardcodes `github.com/modelint/elevator/blob/main/<path>` links into this repository, so
+  **any folder move here silently breaks them** — nothing on either side validates them, and readers
+  arrive through the wiki. They were repaired in wiki commit `5847c1a`; run
+  `tools/check-wiki-links.sh` after any reorganization to catch the next round. Fixing broken links
+  means editing the wiki repo, not this one.
 - `td-8-domain-diagram.pdf` still sits at the repo root rather than in a `docs/` folder.
 - The UI domain keeps its notes at `elevator/ui/technical-notes/`, not `elevator/ui/docs/
   technical-notes/`, so it does not yet follow the `docs/` convention established in `c822f7c`.
