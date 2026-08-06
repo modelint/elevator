@@ -1,6 +1,0 @@
-//
-// UI.Cabin arrived( shaft: Nominal, direction: Direction )
-//
-// Tell the UI that the cabin in this shaft has arrived at its destination floor
-// and indicate the current service direction
-//
