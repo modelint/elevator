@@ -2,15 +2,14 @@ metadata
     Title : Transfer State Machine Diagram
     Author : Leon Starr
     Document ID : mint.elevator3.td.5
-    Modification date : May 12, 2019
-    Version : 3.3.2
+    Modification date : Aug 5, 2026
+    Version : 3.6.0
     Organization : Model Integration, LLC
     Copyright notice > MIT
     Organization logo > mint
 domain Elevator Management
 class Transfer
 interaction events
-    initial
     Execute
     Dest change request
     Ready to go
@@ -29,19 +28,25 @@ completion events
     Wait to clear
 --
 initial transitions
-    initial > CREATED
+    Execute > WAITING FOR CABIN
 --
-state CREATED
+state WAITING FOR CABIN
 activity
-    // Created in this state
+    New transfer -> /R53/Cabin
+    Set destination( dest: Destination floor ) -> ~UI
 transitions
-    Execute > Creating or updating transfer
+    Ready to go > Dispatching cabin
+    Dest change request > Changing destination before cabin moves
 ignore
     Door closed
         <Door closing not relevant yet> Doors may open and close while waiting to hear back
         from the Cabin. But we don’t care about closing unless we are waiting for floor
         service to expire after arrival.
 can't happen
+    Execute
+        <Execute only from creating shaft state> Execute event is sent from same state of
+        Shaft that creates the Transfer. So this event can’t happen unless a whole new
+        Transfer is created.
     Dest change request
         Execute event is sent from same state of Shaft that creates the Transfer. This event
         is also sent from Shaft, in a future state, so it will always be detected after
@@ -52,35 +57,6 @@ can't happen
         Cabin hasn’t yet been directed to the state where this event would be sent.
     Cabin at destination
         <Cabin not directed to move yet>
-    Requests cleared
-        Transfer hasn’t directed that they be cleared yet.
---
-state Creating or updating transfer
-activity
-    UI.Set destination( Shaft, floor: Destination floor )
-    New transfer -> /R53/Cabin
-    Wait for cabin -> me
-transitions
-    Wait for cabin > WAITING FOR CABIN
---
-state WAITING FOR CABIN
-activity
-    // Cabin enroute
-transitions
-    Ready to go > Dispatching cabin
-    Dest change request > Changing destination before cabin moves
-ignore
-    Door closed
-        <Door closing not relevant yet>
-can't happen
-    Execute
-        <Execute only from creating shaft state> Execute event is sent from same state of
-        Shaft that creates the Transfer. So this event can’t happen unless a whole new
-        Transfer is created.
-    Cabin redirected
-        Cabin hasn’t been requested to redirect.
-    Cabin at destination
-        The Cabin is stationary, so it can’t be arriving anywhere.
     Requests cleared
         <Requests not yet cleared> We haven’t yet tried to clear any stop or floor call
         requests yet, and they can’t clear themselves alone. (Even an administration clear

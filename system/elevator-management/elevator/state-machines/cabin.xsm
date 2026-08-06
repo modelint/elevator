@@ -111,7 +111,6 @@ activity
 transitions
     Prepare to move > SECURING DOORS
     Already there > PICKUP DROPOFF
-    Take out of service > OUT OF SERVICE
 --
 state PICKUP DROPOFF
 activity
