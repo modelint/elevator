@@ -23,7 +23,7 @@ projects — the project directory is the clone.
 
 ```
 Elevator/                    <- PyCharm project root AND git clone
-├── system/                  <- all model content
+├── elevator/                <- all model content, named for the system
 ├── technical-notes/         <- legacy TN PDFs (see "Known inconsistencies")
 ├── td-8-domain-diagram.pdf  <- legacy, root-level
 └── working/                 <- GITIGNORED scratch space
@@ -50,27 +50,39 @@ Active work is on **`refine`**, not `main`.
 
 ## Model content structure
 
-`system/system.yaml` declares the domains and their aliases — read it first to orient:
+The content root is `elevator/`, named for the system. This layout deliberately mirrors
+`xuml-populate`'s `input/elevator/` so the models can be fed to the populator directly — keep the
+two in step when either changes. The nesting is
+`<system>/<domain>/<subsystem>/`, which is why `elevator` appears twice in
+`elevator/elevator-management/elevator/`.
+
+`elevator/system.yaml` declares the domains and their aliases — read it first to orient:
 
 - **Elevator Management (EVMAN)** — the application domain, the only one modeled in depth
 - **User Interface (UI)**, **Transport (TRANS)**, **Signal IO (SIO)** — service domains
 
-Directories mirror that: `system/elevator-management/` holds the modeled domain, one subdirectory
-per subsystem (`elevator/`), while `system/transport/` and `system/ui/` hold only sketches and
+Directories mirror that: `elevator/elevator-management/` holds the modeled domain, one subdirectory
+per subsystem (`elevator/`), while `elevator/transport/` and `elevator/ui/` hold only sketches and
 technical notes.
 
-Within `system/elevator-management/elevator/`:
+Within `elevator/elevator-management/elevator/`:
 
 | Directory | Contents |
 |---|---|
 | `class-model/` | the domain class model |
-| `state-machines/` | one state machine per lifecycle-bearing class, plus `R53` (an association state machine) |
+| `state-machines/` | one state machine per lifecycle-bearing class, plus `R53` (an association state machine); each `.xsm` also has a generated `.md` state transition table |
 | `methods/<class>/` | class methods, one file each |
-| `external/external.yaml` | the domain's external boundary — events and operations crossing to UI/TRANS/SIO, plus `Implicit:` bridgeable conditions |
+| `external/external.yaml` | the domain's external boundary — events and operations crossing to UI/TRANS/SIO |
+| `external/mark.yaml` | implicit bridges — attribute-to-attribute mappings and state entries that raise events in an external domain |
 | `deprecated/` | superseded `.scrall` domain/EE operations, kept for reference — do not treat as current |
 | `collaboration-diagram/` | class collaboration diagram |
 
-`system/elevator-management/population/` holds initial instance populations for execution scenarios.
+`elevator/elevator-management/population/` holds initial instance populations for execution
+scenarios.
+
+Only `class-model/`, `state-machines/`, `methods/`, and `external/` have counterparts in
+`xuml-populate`; `collaboration-diagram/`, `deprecated/`, `population/`, `transport/`, and `ui/` are
+specific to this repository.
 
 ## File formats
 
@@ -98,6 +110,29 @@ So `cabin.xsm`, `cabin.mls`, and `cabin.pdf` are three views of one artifact. Ed
 alone leaves the `.pdf` stale, and adding a state requires placing it in the `.mls` before the
 diagram will regenerate correctly. The committed PDFs are build products kept in-tree so GitHub
 readers can see the diagrams.
+
+### Regenerating build products
+
+Run from the directory holding the model files:
+
+```
+flatland -m cabin.xsm -l cabin.mls -d cabin.pdf   # diagram    (flatland 3.0.1)
+xsm -t cabin.xsm                                  # state table -> cabin.md (xsm 1.1.0)
+```
+
+Check the toolchain versions first with `flatland -V` and `xsm -V`; output format has changed
+between releases. `xsm -t` always writes `<name>.md` beside the source. Flatland's output is
+deterministic, so regenerating an unchanged model produces a byte-identical PDF and no git diff —
+a PDF that *does* show a diff means the model genuinely changed.
+
+Flatland fails hard when a model and its layout disagree, e.g.
+
+```
+ERROR - Model event [Take out of service] does not name any connector in layout.
+```
+
+That means the `.xsm` has a transition with no connector placed in the `.mls`. Fix it by adding the
+connector to the layout or removing the transition from the model — never by editing the PDF.
 
 ### Metadata blocks and the Document Register
 
@@ -127,8 +162,10 @@ When a model change breaks population, that shows up in `xuml-populate`, not her
 The repo predates most of the toolchain and has drifted. Do not assume existing structure is
 intentional:
 
-- Root-level `technical-notes/` and `td-8-domain-diagram.pdf` overlap
-  `system/ui/technical-notes/` — two conventions, unreconciled.
-- `README.md` still describes the 2017-era "3rd release, never published" state and predates the
-  Blueprint toolchain entirely.
-- `deprecated/` holds `.scrall` operations superseded by the `.mtd` methods.
+- Root-level `technical-notes/` and `td-8-domain-diagram.pdf` sit outside `elevator/` and overlap
+  `elevator/ui/technical-notes/` — two conventions, unreconciled.
+- `deprecated/` holds `.scrall` operations superseded by the `.mtd` methods. Their fate is an open
+  question, not a settled decision.
+- Method directories are named for the class with a space (`methods/bank level`), matching
+  `xuml-populate`. State machine *files* keep the hyphenated form (`bank-level.xsm`) — the two
+  conventions coexist deliberately, so do not "correct" either to match the other.

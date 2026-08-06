@@ -14,12 +14,12 @@ The [wiki](https://github.com/modelint/elevator/wiki) walks you through each of 
 
 The models are text, not tool binaries. Every diagram you see is generated from those text files rather than drawn by hand, so the model source is the thing under version control and the PDFs are build products committed alongside it for convenient reading.
 
-`system/system.yaml` names the domains and is the place to start:
+`elevator/system.yaml` names the domains and is the place to start:
 
 - **Elevator Management** — the application domain, modeled in full
 - **User Interface**, **Transport**, **Signal IO** — service domains, specified only at the boundary where Elevator Management meets them
 
-Under `system/elevator-management/elevator/` you will find the class model, a state machine for each class with a lifecycle, the class methods, and an `external/` specification of the events and operations that cross the domain boundary. `technical-notes/` holds the write-ups of the floor search and bank selection algorithms.
+Under `elevator/elevator-management/elevator/` you will find the class model, a state machine for each class with a lifecycle, the class methods, and an `external/` specification of the events and operations that cross the domain boundary. `technical-notes/` holds the write-ups of the floor search and bank selection algorithms.
 
 ## License
 
