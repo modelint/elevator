@@ -188,23 +188,32 @@ holds `elevator.ral` / `mmdb_elevator.ral` snapshots); `ModelExecution` is the e
 being built to run the result. `Sequins` and `TabletQT` also carry elevator artifacts as fixtures.
 When a model change breaks population, that shows up in `xuml-populate`, not here.
 
+## Deliberately deferred
+
+**The case study leads; everything downstream follows.** The optimum organization is being settled
+here first and propagated outward afterwards. The two items below are consequences of that ordering
+— scheduled work, *not* drift to repair. Do not act on either unprompted, and in particular do not
+rename anything downstream while the layout here is still in flux.
+
+- **`xuml-populate` input paths.** Its tree is still `input/elevator/elevator-management/elevator/`,
+  the pre-`94585d0` bare-name layout, so the two projects are no longer path-identical. They were
+  kept identical so models could be fed to the populator directly, and they will be again — the
+  populator gets updated once the organization here is final. Until then, do not assume a path that
+  works in one project works in the other.
+- **Wiki links.** The wiki hardcodes `github.com/modelint/elevator/blob/main/<path>` links into this
+  repository, so any folder move here silently breaks them — nothing on either side validates them,
+  and readers arrive through the wiki. `94585d0` renamed every top-level folder after the last repair
+  (wiki commit `5847c1a`), so some are probably broken right now. The wiki is itself still in
+  progress, so checking waits until it settles: **do not run `tools/check-wiki-links.sh` or report
+  broken links unprompted.** When the time comes it is
+  `tools/check-wiki-links.sh working/elevator.wiki refine`, and fixing them means editing the wiki
+  repo, not this one.
+
 ## Known inconsistencies
 
-The repo predates most of the toolchain and has drifted. Do not assume existing structure is
-intentional:
+Unlike the section above, these are genuine drift — the repo predates most of the toolchain. Do not
+assume existing structure is intentional:
 
-- **`xuml-populate` has not been renamed to match.** Its input tree is still
-  `input/elevator/elevator-management/elevator/`, the pre-`94585d0` bare-name layout. The two were
-  deliberately kept identical so models could be fed to the populator directly; the suffix scheme
-  broke that. Either the populator's input paths get renamed to match, or feeding it from here needs
-  a path translation. Until one of those happens, do not assume a path that works in one project
-  works in the other.
-- The wiki hardcodes `github.com/modelint/elevator/blob/main/<path>` links into this repository, so
-  **any folder move here silently breaks them** — nothing on either side validates them, and readers
-  arrive through the wiki. They were repaired in wiki commit `5847c1a`, but `94585d0` renamed every
-  top-level folder afterwards, so **they are very likely broken again and have not been re-checked**.
-  Run `tools/check-wiki-links.sh working/elevator.wiki refine` once `refine` is pushed. Fixing broken
-  links means editing the wiki repo, not this one.
 - The UI domain keeps its notes at `ui-domain/technical-notes/`, not `ui-domain/docs/
   technical-notes/`, so it does not yet follow the `docs/` convention established in `c822f7c`.
   Transport does the same, with its PDFs sitting loose directly in `transport-domain/`.
